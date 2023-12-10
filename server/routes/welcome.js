@@ -1,4 +1,5 @@
 // @ts-check
+import 'dotenv/config';
 
 export default (app) => {
   app

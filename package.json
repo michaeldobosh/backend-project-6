@@ -3,6 +3,7 @@
    "version": "0.1.0",
    "type": "module",
    "description": "fastify-nodejs-application",
+   "main": "src/index.js",
    "engines": {
       "node": ">=16.x"
    },
@@ -39,6 +40,7 @@
       "@fastify/view": "^7.1.0",
       "@vscode/sqlite3": "^5.0.8",
       "bootstrap": "^5.2.0",
+      "dotenv": "^16.3.1",
       "fastify": "^4.10.2",
       "fastify-cli": "^5.1.0",
       "fastify-error-page": "^4.0.0",
@@ -65,7 +67,6 @@
       "@types/jest": "^28.1.7",
       "@types/node": "^18.7.11",
       "css-loader": "^6.7.1",
-      "dotenv": "^16.3.1",
       "eslint": "^8.22.0",
       "eslint-config-airbnb-base": "^15.0.0",
       "eslint-plugin-import": "^2.26.0",
