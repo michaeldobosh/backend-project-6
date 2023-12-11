@@ -20,7 +20,9 @@ jobs:
         with:
           node-version: '18.x'
           cache: 'npm'
+          script: |
+            export SESSION_KEY=${{ secrets.SESSION_KEY }}
       - run: make setup
       - run: make lint
-      - run: make test
+      - run: make test          
       
