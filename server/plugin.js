@@ -16,7 +16,6 @@ import fastifyObjectionjs from 'fastify-objectionjs';
 import qs from 'qs';
 import Pug from 'pug';
 import i18next from 'i18next';
-import 'dotenv/config';
 
 import ru from './locales/ru.js';
 import en from './locales/en.js';
@@ -34,7 +33,7 @@ const mode = process.env.NODE_ENV || 'development';
 
 const setUpViews = (app) => {
   const helpers = getHelpers(app);
-  app.register(fastifyView, {
+  app.register(fastifyView, { // register
     engine: {
       pug: Pug,
     },
@@ -46,7 +45,7 @@ const setUpViews = (app) => {
     templates: path.join(__dirname, '..', 'server', 'views'),
   });
 
-  app.decorateReply('render', function render(viewPath, locals) {
+  app.decorateReply('render', function render(viewPath, locals) { // decorateReply
     this.view(viewPath, { ...locals, reply: this });
   });
 };
@@ -73,7 +72,7 @@ const setupLocalization = async () => {
 };
 
 const addHooks = (app) => {
-  app.addHook('preHandler', async (req, reply) => {
+  app.addHook('preHandler', async (req, reply) => { // addHook
     reply.locals = {
       isAuthenticated: () => req.isAuthenticated(),
     };
@@ -92,15 +91,15 @@ const registerPlugins = async (app) => {
     },
   });
 
-  fastifyPassport.registerUserDeserializer(
+  fastifyPassport.registerUserDeserializer( // registerUserDeserializer
     (user) => app.objection.models.user.query().findById(user.id),
   );
-  fastifyPassport.registerUserSerializer((user) => Promise.resolve(user));
-  fastifyPassport.use(new FormStrategy('form', app));
-  await app.register(fastifyPassport.initialize());
-  await app.register(fastifyPassport.secureSession());
+  fastifyPassport.registerUserSerializer((user) => Promise.resolve(user)); // registerUserSerializer
+  fastifyPassport.use(new FormStrategy('form', app)); // use
+  await app.register(fastifyPassport.initialize()); // initialize
+  await app.register(fastifyPassport.secureSession()); // secureSession
   await app.decorate('fp', fastifyPassport);
-  app.decorate('authenticate', (...args) => fastifyPassport.authenticate(
+  app.decorate('authenticate', (...args) => fastifyPassport.authenticate( // authenticate
     'form',
     {
       failureRedirect: app.reverse('root'),

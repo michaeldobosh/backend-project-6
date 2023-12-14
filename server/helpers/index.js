@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 export default (app) => ({
   route(name) {
-    return app.reverse(name);
+    return app.reverse(name); // reverse
   },
   t(key) {
     return i18next.t(key);

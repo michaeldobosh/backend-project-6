@@ -1,10 +1,15 @@
 extends ../layouts/application.pug
 
 block header
-  = t('views.session.new.signIn')
+  .container.w-min-50.text-center
+    = t('views.session.new.signIn')
 
 block content
-  +formFor()(action=route('session') method='post')
-    +input(signInForm, 'email', errors)(type="text")
-    +input(signInForm, 'password')(type="password")
-    +submit(signInForm)(value=t('views.session.new.submit'))
+  .container.d-flex.justify-content-center.align-content-center.p-5.border.rounded-3
+    .container.min-w-50
+      h1= "Тут будет картинка"
+    .container.min-w-50
+      +formFor()(action=route('session') method='post')
+        +input(signInForm, 'email', errors)(type="text")
+        +input(signInForm, 'password')(type="password")
+        +submit(signInForm)(value=t('views.session.new.submit'))
