@@ -5,10 +5,10 @@ block header
     = t('views.session.new.signIn')
 
 block content
-  .container.d-flex.justify-content-center.align-content-center.p-5.border.rounded-3
-    .container.min-w-50
+  .container.d-flex.justify-content-around.p-5.border.rounded-3.w-75.shadow.bg-light
+    .container
       h1= "Тут будет картинка"
-    .container.min-w-50
+    .container
       +formFor()(action=route('session') method='post')
         +input(signInForm, 'email', errors)(type="text")
         +input(signInForm, 'password')(type="password")

@@ -5,11 +5,13 @@ block header
     = t('views.users.new.signUp')
 
 block content
-  .container.d-flex.justify-content-center.align-content-center.p-5.border.rounded-3
-    .container.min-w-50
-      h1= "Тут будет картинка"
-    .container.min-w-50
+  .container.d-flex.justify-content-around.p-5.border.rounded-3.w-75.shadow.bg-light
+    .container
+      img(src='../../assets/task.png' alt="task manager")
+    .container
       +formFor()(action=route('users') method='post')
+        +input(user, 'firstName', errors)(type="text")
+        +input(user, 'lastName', errors)(type="text")
         +input(user, 'email', errors)(type="text")
         +input(user, 'password', errors)(type="password")
         +submit(user)(value=t('views.users.new.submit'))
