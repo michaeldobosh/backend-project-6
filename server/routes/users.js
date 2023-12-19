@@ -31,9 +31,12 @@ export default (app) => {
       return reply;
     })
     .get('/users/:id/edit', { name: 'userEditForm' }, (req, reply) => {
-      const user = req?.user;
-      if (user) {
-        reply.render('users/edit', { user });
+      const selectedUserId = req.params.id;
+      const current = req?.user;
+      // const user = await app.objection.models.user.query().findOne({ id: selectedUserId });
+
+      if (current && +selectedUserId === current.id) {
+        reply.render('users/edit', { user: current });
       } else {
         req.flash('error', i18next.t('flash.authError'));
         reply.redirect(app.reverse('root'));
@@ -46,13 +49,7 @@ export default (app) => {
 
       try {
         const validUser = await app.objection.models.user.fromJson(req.body.data);
-        await app.objection.models.user.query(`UPDATE users SET
-            first_name = ${validUser.firstName},
-            last_name = ${validUser.lastName},
-            email = ${validUser.email},
-            password_digest = ${validUser.passwordDigest},
-            WHERE id = ${id}
-        `);
+        await app.objection.models.user.query().patch(validUser).where({ id });
         req.flash('info', i18next.t('flash.users.edit.success'));
         reply.redirect(app.reverse('root'));
       } catch ({ data }) {
@@ -61,12 +58,18 @@ export default (app) => {
       }
     })
     .delete('/users/:id', { name: 'deleteUser' }, async (req, reply) => {
-      const id = req.user?.id;
+      const current = req?.user;
+      const selectedUserId = req.params.id;
+
       try {
-        req.logOut();
-        await app.objection.models.user.query().delete().where({ id });
-        req.flash('info', i18next.t('flash.users.delete.success'));
-        reply.redirect(app.reverse('root'));
+        if (current && +selectedUserId === current.id) {
+          req.logOut();
+          await app.objection.models.user.query().delete().where({ id: selectedUserId });
+          req.flash('info', i18next.t('flash.users.delete.success'));
+          reply.redirect(app.reverse('root'));
+        } else {
+          throw new Error();
+        }
       } catch (err) {
         req.flash('error', i18next.t('flash.authError'));
         reply.redirect(app.reverse('root'));

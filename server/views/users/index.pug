@@ -19,9 +19,9 @@ block content
           td= user.firstName + ' ' + user.lastName
           td= user.email
           td= formatDate(user.createdAt)
-          if user.id == currentUserId
-            td.d-flex
-                a(href=`/users/${user.id}/edit` class='btn btn-primary me-1')=t('views.users.actions.edit')
-                +buttonTo(`/users/${user.id}`, 'DELETE')(value=t('views.users.actions.delete')).btn.btn-danger
-          else
-            td
+          td.d-flex
+            a(href=`/users/${user.id}/edit` class='btn btn-primary me-1')=t('views.users.actions.edit')
+            +buttonTo(`/users/${user.id}`, 'DELETE')(value=t('views.users.actions.delete')).btn.btn-danger
+            if user.id == currentUserId
+              .container.text-success.fw-bold.align-self-center='Active'
+
