@@ -1,0 +1,23 @@
+extends ../layouts/application.pug
+
+block header 
+  h1=t('layouts.application.labels')
+  a.btn.btn-primary(href=route('newLabel'))=t('views.labels.actions.create')
+
+block content
+  table.bg-white.table.table-striped.mt-5
+    thead
+      tr
+        th= t('views.labels.id')
+        th= t('views.labels.name')
+        th= t('views.labels.createdAt')
+        th= t('')
+    tbody
+      each label in labels
+        tr
+          td= label.id
+          td= label.name
+          td= formatDate(label.createdAt)
+          td.d-flex
+            a(href=`/labels/${label.id}/edit` class='btn btn-primary me-1')=t('views.labels.actions.edit')
+            +buttonTo(`/labels/${label.id}`, 'DELETE')(value=t('views.labels.actions.delete')).btn.btn-danger

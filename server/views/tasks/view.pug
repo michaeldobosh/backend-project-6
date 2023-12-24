@@ -1,0 +1,24 @@
+extends ../layouts/application.pug
+
+block header 
+  h1=task.name
+
+block content
+  .mt-5.p-5.shadow.bg-white
+    .row
+      .col
+        p.fs-5= task.description
+      .col-4.border-start
+        if (status)
+          .badge.bg-danger= status.name
+        if (label)
+          .badge.bg-danger= label.name
+        if (creator)
+          p= `${t('views.tasks.author')} ${creator.firstName} ${creator.lastName}`
+        if (executor)
+          p= `${t('views.tasks.executor')} ${executor.firstName} ${executor.lastName}`
+        p= `${t('views.tasks.createdAt')} ${formatDate(task.createdAt)}`
+        .d-flex
+            a(href=`/tasks/${task.id}/edit` class='btn btn-primary me-1')=t('views.tasks.actions.edit')
+            +buttonTo(`/tasks/${task.id}`, 'DELETE')(value=t('views.tasks.actions.delete')).btn.btn-danger
+

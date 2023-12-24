@@ -7,7 +7,7 @@ html(lang="en")
     script(src=assetPath('main.js'))
     link(href=assetPath('main.css') rel="stylesheet")
     meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
-  body.d-flex.flex-column.min-vh-100
+  body.d-flex.flex-column.min-vh-100.bg-light
     nav.navbar.navbar-expand-lg.navbar-dark.bg-secondary.mb-3.shadow-sm.d-block
       .container.min-w-75
         a.navbar-brand(href=route('root'))= t('appName')
@@ -20,6 +20,12 @@ html(lang="en")
                 a.nav-link(href=route('users'))= t('layouts.application.users')
           ul.navbar-nav
             if isAuthenticated()
+              li.nav-item
+                a.nav-link(href=route('statuses'))= t('layouts.application.statuses')
+              li.nav-item
+                a.nav-link(href=route('labels'))= t('layouts.application.labels')
+              li.nav-item
+                a.nav-link(href=route('tasks'))= t('layouts.application.tasks')
               li.nav-item
                 +buttonTo(route('session'), 'delete')(class="btn nav-link" value=t('layouts.application.signOut'))
             else

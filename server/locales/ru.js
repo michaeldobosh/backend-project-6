@@ -27,6 +27,48 @@ export default {
           success: 'Пользователь успешно удалён',
         },
       },
+      statuses: {
+        create: {
+          error: 'Ошибка при создании статуса',
+          success: 'Статус успешно создан',
+        },
+        edit: {
+          error: 'Ошибка изменения статуса',
+          success: 'Статус успешно изменён',
+        },
+        delete: {
+          error: 'Не удалось удалить',
+          success: 'Статус успешно удалён',
+        },
+      },
+      tasks: {
+        create: {
+          error: 'Ошибка при создании задачи',
+          success: 'Задача успешно создана',
+        },
+        edit: {
+          error: 'Ошибка изменения задачи',
+          success: 'Задача успешно изменена',
+        },
+        delete: {
+          error: 'Не удалось удалить задачу',
+          success: 'Задача успешно удалена',
+        },
+      },
+      labels: {
+        create: {
+          error: 'Ошибка при создании метки',
+          success: 'Метка успешно создана',
+        },
+        edit: {
+          error: 'Ошибка изменения метки',
+          success: 'Метка успешно изменена',
+        },
+        delete: {
+          error: 'Не удалось удалить',
+          success: 'Метка успешно удалена',
+        },
+      },
       authError: 'Доступ запрещён! Пожалуйста, авторизируйтесь.',
     },
     layouts: {
@@ -35,6 +77,15 @@ export default {
         signIn: 'Вход',
         signUp: 'Регистрация',
         signOut: 'Выход',
+        statuses: 'Статусы',
+        createStatus: 'Создание статуса',
+        editStatus: 'Изменение статуса',
+        tasks: 'Задачи',
+        createTask: 'Создание задачи',
+        editTask: 'Изменение задачи',
+        labels: 'Метки',
+        createLabel: 'Создание метки',
+        editLabel: 'Изменение метки',
       },
     },
     views: {
@@ -64,6 +115,47 @@ export default {
         edit: {
           editUser: 'Изменение пользователя',
           submit: 'Изменить',
+        },
+      },
+      statuses: {
+        id: 'ID',
+        name: 'Наименование',
+        createdAt: 'Дата создания',
+        actions: {
+          create: 'Создать статус',
+          new: 'Создать',
+          edit: 'Изменить',
+          delete: 'Удалить',
+        },
+      },
+      tasks: {
+        id: 'ID',
+        name: 'Наименование',
+        description: 'Описание',
+        status: 'Статус',
+        author: 'Автор',
+        executor: 'Исполнитель',
+        label: 'Метка',
+        labels: 'Метки',
+        createdAt: 'Дата создания',
+        only_my_tasks: 'Только мои задачи',
+        actions: {
+          create: 'Создать задачу',
+          new: 'Создать',
+          edit: 'Изменить',
+          delete: 'Удалить',
+          show: 'Показать',
+        },
+      },
+      labels: {
+        id: 'ID',
+        name: 'Наименование',
+        createdAt: 'Дата создания',
+        actions: {
+          create: 'Создать метку',
+          new: 'Создать',
+          edit: 'Изменить',
+          delete: 'Удалить',
         },
       },
       welcome: {

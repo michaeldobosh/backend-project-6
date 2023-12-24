@@ -18,9 +18,27 @@ export default {
           error: 'Failed to register',
           success: 'User registered successfully',
         },
+        edit: {
+          error: 'Failed to change user',
+          success: 'User successfully changed',
+        },
         delete: {
           error: 'Failed to delete',
           success: 'User successfully deleted',
+        },
+      },
+      statuses: {
+        create: {
+          error: 'Error creating status',
+          success: 'Status successfully created',
+        },
+        edit: {
+          error: 'Status change error',
+          success: 'Status changed successfully',
+        },
+        delete: {
+          error: 'Failed to delete',
+          success: 'Status successfully deleted',
         },
       },
       authError: 'Access denied! Please login',
@@ -31,6 +49,10 @@ export default {
         signIn: 'Login',
         signUp: 'Register',
         signOut: 'Logout',
+        statuses: 'Statuses',
+        createStatus: 'Creating a status',
+        editStatus: 'Change of status',
+        tasks: 'Tasks',
       },
     },
     views: {
@@ -56,6 +78,21 @@ export default {
         new: {
           submit: 'Register',
           signUp: 'Register',
+        },
+        edit: {
+          editUser: 'Change user',
+          submit: 'Change',
+        },
+      },
+      statuses: {
+        id: 'ID',
+        name: 'Name',
+        createdAt: 'Date of creation',
+        actions: {
+          create: 'Create status',
+          new: 'Create',
+          edit: 'Edit',
+          delete: 'Delete',
         },
       },
       welcome: {

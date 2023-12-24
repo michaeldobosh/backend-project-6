@@ -1,0 +1,23 @@
+extends ../layouts/application.pug
+
+block header 
+  h1=t('layouts.application.createStatus')
+
+block content
+  .container
+    form(action=route('createStatus'), method='POST')
+      - propertyErrors = _.get(errors, 'name')
+      - classLine = 'form-control' + (_.isEmpty(propertyErrors) ? '' : ' is-invalid')
+      .mb-3(class=(errors && 'has-danger')).form-floating
+        input(
+        class=classLine,
+        type="text",
+        id='data_name',
+        placeholder=t('views.statuses.name'),
+        name='data[name]',
+        value=_.get(status, 'name', ''))
+
+        if !_.isEmpty(propertyErrors)
+          .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
+        label(for='data_name')=t('views.statuses.name')
+      input.btn.btn-primary(type='submit', value=t('views.statuses.actions.new'))

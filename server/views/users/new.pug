@@ -7,9 +7,9 @@ block header
 block content
   .container.d-flex.justify-content-around.p-5.border.rounded-3.w-75.shadow.bg-light
     .container
-      img(src='../../assets/task.png' alt="task manager")
+      img(src=assetPath('task.png') alt="task manager")
     .container
-      +formFor()(action=route('users') method='post')
+      +formFor()(action='/users' method='POST')
         +input(user, 'firstName', errors)(type="text")
         +input(user, 'lastName', errors)(type="text")
         +input(user, 'email', errors)(type="text")

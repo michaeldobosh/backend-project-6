@@ -1,12 +1,47 @@
 {
   "users": {
     "new": {
+      "firstName": "malika",
+      "lastName": "hodkiewicz",
       "email": "malika_hodkiewicz75@live.com",
       "password": "RLJvaIgPOnX5r03"
     },
     "existing": {
+      "firstName": "lawrence",
+      "lastName": "kulas",
       "email": "lawrence.kulas87@outlook.com",
       "password": "O6AvLIQL1cbzrre"
+    }
+  },
+  "statuses": {
+    "new": {
+      "name": "In progress"
+    },
+    "existing": {
+      "name": "Not started"
+    }
+  },
+  "tasks": {
+    "new": {
+      "name": "Buy apples",
+      "description": "About task...",
+      "statusId": 1,
+      "creatorId": 2,
+      "executorId": 1
+    },
+    "existing": {
+      "name": "Clean the house",
+      "description": "About task...",
+      "statusId": 2,
+      "creatorId": 1,
+      "executorId": 1
+    },
+    "existing2": {
+      "name": "Go to work",
+      "description": "About task...",
+      "statusId": 1,
+      "creatorId": 2,
+      "executorId": 1
     }
   }
 }
