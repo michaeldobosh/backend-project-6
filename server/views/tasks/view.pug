@@ -11,8 +11,9 @@ block content
       .col-4.border-start
         if (status)
           .badge.bg-danger= status.name
-        if (label)
-          .badge.bg-danger= label.name
+        if (labels)
+          for label in labels
+            .badge.bg-info.ms-1= label.name
         if (creator)
           p= `${t('views.tasks.author')} ${creator.firstName} ${creator.lastName}`
         if (executor)

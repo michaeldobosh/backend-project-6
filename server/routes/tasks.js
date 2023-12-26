@@ -42,21 +42,31 @@ export default (app) => {
       return reply;
     })
     .post('/tasks', { name: 'createTask' }, async (req, reply) => {
+      const labelsIds = [req.body.data.labels].flat();
+      const existingLabels = await app.objection.models.label.query().findByIds(labelsIds);
       const currentUser = req.user;
-      const task = new models.task();
-      task.$set(req.body.data);
-      task.statusId = +task.statusId;
-      task.executorId = +task.executorId;
-      task.creatorId = currentUser.id;
+      const formData = new models.task().$set(req.body.data);
+      const taskData = {
+        ...formData,
+        statusId: Number(formData.statusId),
+        executorId: !formData.executorId ? null : Number(formData.executorId),
+        creatorId: currentUser.id,
+        labels: existingLabels,
+      };
+
       const statuses = await models.status.query();
       const users = await models.user.query();
       const labels = await models.label.query();
 
       try {
         if (req.isAuthenticated()) {
-          const validTask = await models.task.fromJson(task);
-          validTask.name = validTask.name.trim();
-          await models.task.query().insert(validTask);
+          const validTaskData = await models.task.fromJson(taskData);
+          validTaskData.name = validTaskData.name.trim();
+          await models.task.transaction(async (trx) => {
+            const insertedTask = await models.task.query(trx)
+              .insertGraph(validTaskData, { relate: ['labels'] });
+            return insertedTask;
+          });
           req.flash('info', i18next.t('flash.tasks.create.success'));
           reply.redirect(app.reverse('tasks'));
         } else {
@@ -67,7 +77,7 @@ export default (app) => {
         req.flash('error', i18next.t('flash.tasks.create.error'));
         req.flash('error', error.message);
         reply.render('tasks/new', {
-          task,
+          task: formData,
           statuses,
           users,
           labels,
@@ -80,11 +90,11 @@ export default (app) => {
       const { id } = req.params;
 
       if (req.isAuthenticated()) {
-        const task = await models.task.query().findOne({ id });
-        const labels = await models.labelTasks.query();
+        const task = await models.task.query().findById(id);
         const status = await models.status.query().findOne({ id: task.statusId });
         const creator = await models.user.query().findOne({ id: task.creatorId });
         const executor = await models.user.query().findOne({ id: task.executorId });
+        const labels = await task.$relatedQuery('labels');
 
         reply.render('tasks/view', {
           task,
@@ -121,21 +131,31 @@ export default (app) => {
     })
     .patch('/tasks/:id', async (req, reply) => {
       const { id } = req.params;
-      const selectedTask = await models.task.query().findOne({ id });
-      const task = new models.task();
-      task.$set(req.body.data);
-      task.statusId = +task.statusId;
-      task.executorId = +task.executorId;
-      task.creatorId = selectedTask.creatorId;
-      task.labelId = +task.creatorId;
+      const selectedTask = await models.task.query().findById(id);
+      const formData = new models.task().$set(req.body.data);
+      const labelsIds = [req.body.data.labels].flat();
+      const existingLabels = await app.objection.models.label.query().findByIds(labelsIds);
+      const taskData = {
+        ...formData,
+        creatorId: selectedTask.creatorId,
+        statusId: Number(formData.statusId),
+        executorId: !formData.executorId ? null : Number(formData.executorId),
+        labels: existingLabels,
+      };
+
       const statuses = await models.status.query();
       const users = await models.user.query();
       const labels = await models.label.query();
 
       try {
         if (req.isAuthenticated()) {
-          const validTask = await models.task.fromJson(task);
-          await selectedTask.$query().patch(validTask);
+          const validTaskData = await models.task.fromJson(taskData);
+          validTaskData.name = validTaskData.name.trim();
+          await models.task.transaction(async (trx) => {
+            const updatedTask = await models.task.query(trx)
+              .upsertGraph(validTaskData, { relate: ['labels'], insertMissing: true });
+            return updatedTask;
+          });
           req.flash('info', i18next.t('flash.tasks.edit.success'));
           reply.redirect(app.reverse('tasks'));
         } else {
@@ -144,8 +164,9 @@ export default (app) => {
         }
       } catch (error) {
         req.flash('error', i18next.t('flash.tasks.edit.error'));
+        req.flash('error', error.message);
         reply.render('tasks/edit', {
-          task,
+          task: formData,
           statuses,
           users,
           labels,

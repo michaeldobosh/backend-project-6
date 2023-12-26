@@ -20,4 +20,23 @@ module.exports = class Label extends unique(BaseModel) {
       },
     };
   }
+
+  static get relationMappings() {
+    const Task = require('./Task.cjs');
+
+    return {
+      tasks: {
+        relation: BaseModel.ManyToManyRelation,
+        modelClass: Task,
+        join: {
+          from: 'labels.id',
+          through: {
+            from: 'label_tasks.labelId',
+            to: 'label_tasks.taskId',
+          },
+          to: 'tasks.id',
+        },
+      },
+    };
+  }
 };

@@ -24,7 +24,6 @@ module.exports = class Task extends unique(BaseModel) {
         statusId: { type: 'integer' },
         creatorId: { type: 'integer' },
         executorId: { type: 'integer' },
-        labels: { type: 'integer' },
       },
     };
   }
@@ -60,8 +59,8 @@ module.exports = class Task extends unique(BaseModel) {
       join: {
         from: 'tasks.id',
         through: {
-          from: 'label_tasks.labelId',
-          to: 'label_tasks.taskId',
+          from: 'label_tasks.taskId',
+          to: 'label_tasks.labelId',
         },
         to: 'labels.id',
       },
