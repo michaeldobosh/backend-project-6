@@ -82,14 +82,17 @@ export default (app) => {
     })
     .delete('/labels/:id', { name: 'deleteLabel' }, async (req, reply) => {
       const { id } = req.params;
+      const tasks = await models.task.query();
+      const labels = await models.task.relatedQuery('labels').for(tasks);
+      const hasRelation = !!labels.find((label) => label.id === Number(id));
 
-      if (req.isAuthenticated()) {
+      if (req.isAuthenticated() && !hasRelation) {
         await models.label.query().delete().where({ id });
         req.flash('info', i18next.t('flash.labels.delete.success'));
         reply.redirect(app.reverse('labels'));
       } else {
         req.flash('error', i18next.t('flash.labels.delete.error'));
-        reply.render('labels');
+        reply.redirect(app.reverse('labels'));
       }
     });
 };

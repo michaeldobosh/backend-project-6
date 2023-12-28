@@ -82,14 +82,17 @@ export default (app) => {
     })
     .delete('/statuses/:id', { name: 'deleteStatus' }, async (req, reply) => {
       const { id } = req.params;
+      const tasks = await models.task.query();
+      const statuses = await models.task.relatedQuery('statuses').for(tasks);
+      const hasRelation = !!statuses.find((status) => status.id === Number(id));
 
-      if (req.isAuthenticated()) {
+      if (req.isAuthenticated() && !hasRelation) {
         await models.status.query().delete().where({ id });
         req.flash('info', i18next.t('flash.statuses.delete.success'));
         reply.redirect(app.reverse('statuses'));
       } else {
         req.flash('error', i18next.t('flash.statuses.delete.error'));
-        reply.render('statuses');
+        reply.redirect(app.reverse('statuses'));
       }
     });
 };

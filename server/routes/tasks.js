@@ -4,17 +4,40 @@ export default (app) => {
   const { models } = app.objection;
   app
     .get('/tasks', { name: 'tasks' }, async (req, reply) => {
-      const tasks = await models.task.query();
-      const statuses = await models.status.query();
-      const users = await models.user.query();
-      const labels = await models.label.query();
+      req.query.isCreatorUser = req.query.isCreatorUser ? 'on' : '';
+      const queryData = Object.entries(req.query)
+        .filter(([, value]) => value)
+        .reduce((acc, [key, value]) => {
+          acc[key] = value;
+          return acc;
+        }, {});
 
       if (req.isAuthenticated()) {
+        let tasks;
+        if (queryData.label) {
+          const filteredLabelTasks = await models.label.query().findById(queryData.label);
+          tasks = await filteredLabelTasks.$relatedQuery('tasks')
+            .skipUndefined()
+            .where({ statusId: queryData.status })
+            .where({ executorId: queryData.executor })
+            .skipUndefined();
+        } else {
+          tasks = await models.task.query()
+            .where({ statusId: queryData.status })
+            .where({ executorId: queryData.executor })
+            .skipUndefined();
+        }
+
+        const users = await models.user.query();
+        const labels = await models.label.query();
+        const statuses = await models.status.query();
+
         reply.render('tasks/index', {
           tasks,
           statuses,
           users,
           labels,
+          query: queryData,
         });
       } else {
         req.flash('error', i18next.t('flash.authError'));
@@ -117,11 +140,13 @@ export default (app) => {
         const statuses = await models.status.query();
         const users = await models.user.query();
         const labels = await models.label.query();
+        const selectedLabels = await task.$relatedQuery('labels');
         reply.render('tasks/edit', {
           task,
           statuses,
           users,
           labels,
+          selectedLabels,
         });
       } else {
         req.flash('error', i18next.t('flash.authError'));
@@ -146,15 +171,16 @@ export default (app) => {
       const statuses = await models.status.query();
       const users = await models.user.query();
       const labels = await models.label.query();
+      const selectedLabels = await models.task.relatedQuery('labels').for(selectedTask);
 
       try {
         if (req.isAuthenticated()) {
           const validTaskData = await models.task.fromJson(taskData);
           validTaskData.name = validTaskData.name.trim();
           await models.task.transaction(async (trx) => {
-            const updatedTask = await models.task.query(trx)
-              .upsertGraph(validTaskData, { relate: ['labels'], insertMissing: true });
-            return updatedTask;
+            const insertedTask = await models.task.query(trx)
+              .upsertGraph(validTaskData, { relate: ['labels'] });
+            return insertedTask;
           });
           req.flash('info', i18next.t('flash.tasks.edit.success'));
           reply.redirect(app.reverse('tasks'));
@@ -170,6 +196,7 @@ export default (app) => {
           statuses,
           users,
           labels,
+          selectedLabels,
           errors: error.data,
         });
       }

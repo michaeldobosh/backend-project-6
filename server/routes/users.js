@@ -59,16 +59,26 @@ export default (app) => {
       return reply;
     })
     .delete('/users/:id', { name: 'deleteUser' }, async (req, reply) => {
-      const currentUser = req.user;
       const { id } = req.params;
+      const currentUser = req.user;
+      const selectedUser = await models.user.query().findById(id);
+      const tasks = await models.task.query();
+      const creators = await models.task.relatedQuery('creators').for(tasks);
+      const executors = await models.task.relatedQuery('executors').for(tasks);
+      const hasRelation = !![...creators, ...executors].find((user) => user.id === Number(id));
+      const isCurrent = selectedUser.id === currentUser?.id;
+      console.log(isCurrent);
 
-      if (req.isAuthenticated() && +id === currentUser.id) {
+      if (req.isAuthenticated() && isCurrent && !hasRelation) {
         req.logOut();
         await models.user.query().delete().where({ id });
         req.flash('info', i18next.t('flash.users.delete.success'));
         reply.redirect(app.reverse('root'));
-      } else {
+      } else if (!req.isAuthenticated() || !isCurrent) {
         req.flash('error', i18next.t('flash.authError'));
+        reply.redirect(app.reverse('root'));
+      } else {
+        req.flash('error', i18next.t('flash.users.delete.error'));
         reply.redirect(app.reverse('root'));
       }
     });
