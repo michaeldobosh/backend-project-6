@@ -178,9 +178,15 @@ export default (app) => {
           const validTaskData = await models.task.fromJson(taskData);
           validTaskData.name = validTaskData.name.trim();
           await models.task.transaction(async (trx) => {
-            const insertedTask = await models.task.query(trx)
-              .upsertGraph(validTaskData, { relate: ['labels'] });
-            return insertedTask;
+            const upsertedTask = await models.task.query(trx).where({ id })
+              .patch(validTaskData);
+
+            const relatedTask = await upsertedTask
+              .$relatedQuery('labels', trx)
+              .delete()
+              .insert(upsertedTask);
+
+            return relatedTask;
           });
           req.flash('info', i18next.t('flash.tasks.edit.success'));
           reply.redirect(app.reverse('tasks'));
