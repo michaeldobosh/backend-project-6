@@ -38,6 +38,8 @@ const rollbar = new Rollbar({
   captureUnhandledRejections: true,
 });
 
+rollbar.log('Hello, World');
+
 const setUpViews = (app) => {
   const helpers = getHelpers(app);
   app.register(fastifyView, {
@@ -104,7 +106,7 @@ const registerPlugins = async (app) => {
   fastifyPassport.registerUserSerializer((user) => Promise.resolve(user));
   fastifyPassport.use(new FormStrategy('form', app));
   await app.register(fastifyPassport.initialize());
-  await app.register(fastifyPassport.secureSession())
+  await app.register(fastifyPassport.secureSession());
   await app.decorate('fp', fastifyPassport);
   app.decorate('authenticate', (...args) => fastifyPassport.authenticate(
     'form',

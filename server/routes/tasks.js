@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import i18next from 'i18next';
 
 export default (app) => {
@@ -226,5 +227,6 @@ export default (app) => {
         req.flash('error', i18next.t('flash.tasks.delete.error'));
         reply.render('tasks');
       }
+      return reply;
     });
 };
