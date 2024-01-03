@@ -8,7 +8,7 @@ export default (app) => {
       const {
         label, executor, status, isCreatorUser,
       } = req.query;
-      const { id } = req.user;
+      const userId = req.user?.id;
 
       if (req.isAuthenticated()) {
         const tasksQuery = models.task.query().withGraphJoined('[creators, executors, statuses, labels]');
@@ -17,7 +17,7 @@ export default (app) => {
         tasksQuery.skipUndefined().modify('filterStatus', status || undefined);
         tasksQuery.skipUndefined().modify('filterLabel', label || undefined);
         if (isCreatorUser) {
-          tasksQuery.skipUndefined().modify('filterCreator', id || undefined);
+          tasksQuery.skipUndefined().modify('filterCreator', userId || undefined);
         }
 
         const tasks = await tasksQuery;
