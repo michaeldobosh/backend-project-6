@@ -2,7 +2,7 @@
   {
     "name": "Clean the house",
     "description": "About task...",
-    "statusId": 1,
+    "statusId": 2,
     "creatorId": 1,
     "executorId": 1
   },
@@ -10,7 +10,7 @@
     "name": "Go to work",
     "description": "About task...",
     "statusId": 1,
-    "creatorId": 2,
+    "creatorId": 2, 
     "executorId": 1
   }
 ]

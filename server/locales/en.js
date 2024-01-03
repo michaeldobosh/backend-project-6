@@ -41,6 +41,34 @@ export default {
           success: 'Status successfully deleted',
         },
       },
+      tasks: {
+        create: {
+          error: 'Error creating task',
+          success: 'Task successfully created',
+        },
+        edit: {
+          error: 'Task change error',
+          success: 'Task changed successfully',
+        },
+        delete: {
+          error: 'Failed to delete task',
+          success: 'Task successfully deleted',
+        },
+      },
+      labels: {
+        create: {
+          error: 'Error creating label',
+          success: 'Label successfully created',
+        },
+        edit: {
+          error: 'Label change error',
+          success: 'Label changed successfully',
+        },
+        delete: {
+          error: 'Failed to delete label',
+          success: 'Label successfully deleted',
+        },
+      },
       authError: 'Access denied! Please login',
     },
     layouts: {
@@ -53,6 +81,11 @@ export default {
         createStatus: 'Creating a status',
         editStatus: 'Change of status',
         tasks: 'Tasks',
+        createTask: 'Creating a task',
+        editTask: 'Change of task',
+        labels: 'Labels',
+        createLabel: 'Creating a labels',
+        editLabel: 'Change of labels',
       },
     },
     views: {
@@ -90,6 +123,36 @@ export default {
         createdAt: 'Date of creation',
         actions: {
           create: 'Create status',
+          new: 'Create',
+          edit: 'Edit',
+          delete: 'Delete',
+        },
+      },
+      tasks: {
+        id: 'ID',
+        name: 'Name',
+        description: 'Description',
+        status: 'Status',
+        author: 'Creator',
+        executor: 'Executor',
+        label: 'Label',
+        labels: 'Labels',
+        createdAt: 'Created at',
+        only_my_tasks: 'Only my tasks',
+        actions: {
+          create: 'Create task',
+          new: 'Create',
+          edit: 'Edit',
+          delete: 'Delete',
+          show: 'Show',
+        },
+      },
+      labels: {
+        id: 'ID',
+        name: 'Name',
+        createdAt: 'Created at',
+        actions: {
+          create: 'Create label',
           new: 'Create',
           edit: 'Edit',
           delete: 'Delete',

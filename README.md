@@ -1,24 +1,22 @@
 # fastify-nodejs-application
 
 [![Node CI](https://github.com/hexlet-boilerplates/fastify-nodejs-application/workflows/Node%20CI/badge.svg)](https://github.com/hexlet-boilerplates/fastify-nodejs-application/actions)
+[![Code Climate](https://api.codeclimate.com/v1/badges/a72a0784d91092956a85/maintainability)](https://codeclimate.com/github/michaeldobosh/backend-project-6/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/a72a0784d91092956a85/test_coverage)](https://codeclimate.com/github/michaeldobosh/backend-project-6/test_coverage)
 
-## Setup
+**Task Manager** – система управления задачами. Позволяет ставить задачи, назначать исполнителей, менять их статусы и категории. Для работы с системой требуется регистрация и аутентификация.
 
+**Установка:**
+1. git clone git@github.com:michaeldobosh/backend-project-6.git
+2. 
 ```bash
 make setup
 ```
 
-## Run
-
+**Запуск:**
 ```bash
 $ make start
-# Open localhost:5000
+# Open localhost:5001
 ```
-
 ---
 
-[![Hexlet Ltd. logo](https://raw.githubusercontent.com/Hexlet/assets/master/images/hexlet_logo128.png)](https://hexlet.io?utm_source=github&utm_medium=link&utm_campaign=fastify-nodejs-application)
-
-This repository is created and maintained by the team and the community of Hexlet, an educational project. [Read more about Hexlet](https://hexlet.io?utm_source=github&utm_medium=link&utm_campaign=fastify-nodejs-application).
-
-See most active contributors on [hexlet-friends](https://friends.hexlet.io/).

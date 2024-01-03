@@ -2,12 +2,12 @@ extends ../layouts/application.pug
 
 block header
   .container.w-min-50.text-center
-    = t('views.session.new.signIn')
+    h1= t('views.session.new.signIn')
 
 block content
   .container.d-flex.justify-content-around.p-5.border.rounded-3.w-75.shadow.bg-light
     .container
-      h1= "Тут будет картинка"
+      img(src=assetPath('task-manager.png') alt="task manager")
     .container
       +formFor()(action=route('session') method='post')
         +input(signInForm, 'email', errors)(type="text")

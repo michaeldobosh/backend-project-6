@@ -2,12 +2,12 @@ extends ../layouts/application.pug
 
 block header
   .container.w-min-50.text-center
-    = t('views.users.new.signUp')
+    h1= t('views.users.new.signUp')
 
 block content
   .container.d-flex.justify-content-around.p-5.border.rounded-3.w-75.shadow.bg-light
     .container
-      img(src=assetPath('task.png') alt="task manager")
+      img(src=assetPath('assets/task-manager.png') alt="task manager")
     .container
       +formFor()(action='/users' method='POST')
         +input(user, 'firstName', errors)(type="text")

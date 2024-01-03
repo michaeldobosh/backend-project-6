@@ -1,13 +1,13 @@
 extends ../layouts/application.pug
 
 block header 
-  h1=task.name
+  h1.text-break=task.name
 
 block content
   .mt-5.p-5.shadow.bg-white
     .row
       .col
-        p.fs-5= task.description
+        p.text-break.fs-5= task.description
       .col-4.border-start
         if (status)
           .badge.bg-danger= status.name

@@ -39,7 +39,7 @@ block content
                 else
                   option(value=label.id)=label.name
       .form-check
-        input(class='form-check-input', type='checkbox', value='', id='data_isCreatorUser' name='isCreatorUser' checked=query.isCreatorUser)
+        input(class='form-check-input', type='checkbox', value=checked, id='data_isCreatorUser' name='isCreatorUser' checked=query.isCreatorUser)
         label(class='form-check-label', for='data_isCreatorUser')=t('views.tasks.only_my_tasks')
       .row
         .input-group.mt-3
@@ -61,7 +61,7 @@ block content
         tr
           td= task.id
           td
-            a(href=`/tasks/${task.id}`)=task.name
+            a.text-break(href=`/tasks/${task.id}`)=task.name
           - const status = getDataById(task.statusId, statuses)
           - const creator = getDataById(task.creatorId, users)
           - const executor = getDataById(task.executorId, users)

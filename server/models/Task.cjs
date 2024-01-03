@@ -59,8 +59,8 @@ module.exports = class Task extends unique(BaseModel) {
       join: {
         from: 'tasks.id',
         through: {
-          from: 'label_tasks.taskId',
-          to: 'label_tasks.labelId',
+          from: 'tasks_labels.taskId',
+          to: 'tasks_labels.labelId',
         },
         to: 'labels.id',
       },

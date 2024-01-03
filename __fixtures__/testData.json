@@ -19,6 +19,20 @@
     },
     "existing": {
       "name": "Not started"
+    },
+    "existing2": {
+      "name": "Done" 
+    }
+  },
+  "labels": {
+    "new": {
+      "name": "Group"
+    },
+    "existing": {
+      "name": "Important"
+    },
+    "existing2": {
+      "name": "With a report"
     }
   },
   "tasks": {
@@ -27,7 +41,7 @@
       "description": "About task...",
       "statusId": 1,
       "creatorId": 2,
-      "executorId": 1
+      "executorId": 2
     },
     "existing": {
       "name": "Clean the house",
@@ -42,6 +56,19 @@
       "statusId": 1,
       "creatorId": 2,
       "executorId": 1
+    }
+  },
+  "tasksLabels": {
+    "new": {
+      "name": "Group"
+    },
+    "existing1": {
+      "labelId": 1,
+      "taskId": 1
+    },
+    "existing2": {
+      "labelId": 2,
+      "taskId": 1
     }
   }
 }

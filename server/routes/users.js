@@ -67,7 +67,6 @@ export default (app) => {
       const executors = await models.task.relatedQuery('executors').for(tasks);
       const hasRelation = !![...creators, ...executors].find((user) => user.id === Number(id));
       const isCurrent = selectedUser.id === currentUser?.id;
-      console.log(isCurrent);
 
       if (req.isAuthenticated() && isCurrent && !hasRelation) {
         req.logOut();

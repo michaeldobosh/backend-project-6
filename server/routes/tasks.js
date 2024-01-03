@@ -4,13 +4,15 @@ export default (app) => {
   const { models } = app.objection;
   app
     .get('/tasks', { name: 'tasks' }, async (req, reply) => {
-      req.query.isCreatorUser = req.query.isCreatorUser ? 'on' : '';
       const queryData = Object.entries(req.query)
         .filter(([, value]) => value)
         .reduce((acc, [key, value]) => {
           acc[key] = value;
           return acc;
         }, {});
+      if (req.query.isCreatorUser) {
+        queryData.creator = req.user.id;
+      }
 
       if (req.isAuthenticated()) {
         let tasks;
@@ -20,11 +22,13 @@ export default (app) => {
             .skipUndefined()
             .where({ statusId: queryData.status })
             .where({ executorId: queryData.executor })
+            .where({ creatorId: queryData.creator })
             .skipUndefined();
         } else {
           tasks = await models.task.query()
             .where({ statusId: queryData.status })
             .where({ executorId: queryData.executor })
+            .where({ creatorId: queryData.creator })
             .skipUndefined();
         }
 
@@ -155,17 +159,17 @@ export default (app) => {
       return reply;
     })
     .patch('/tasks/:id', async (req, reply) => {
-      const { id } = req.params;
-      const selectedTask = await models.task.query().findById(id);
+      const taskId = Number(req.params.id);
+      const selectedTask = await models.task.query().findById(taskId);
       const formData = new models.task().$set(req.body.data);
-      const labelsIds = [req.body.data.labels].flat();
-      const existingLabels = await app.objection.models.label.query().findByIds(labelsIds);
+      const labelsIds = [req.body.data.labels].flat()
+        .map((labelId) => ({ id: Number(labelId) }));
       const taskData = {
         ...formData,
+        name: formData.name.trim(),
         creatorId: selectedTask.creatorId,
         statusId: Number(formData.statusId),
         executorId: !formData.executorId ? null : Number(formData.executorId),
-        labels: existingLabels,
       };
 
       const statuses = await models.status.query();
@@ -176,17 +180,12 @@ export default (app) => {
       try {
         if (req.isAuthenticated()) {
           const validTaskData = await models.task.fromJson(taskData);
-          validTaskData.name = validTaskData.name.trim();
           await models.task.transaction(async (trx) => {
-            const upsertedTask = await models.task.query(trx).where({ id })
-              .patch(validTaskData);
-
-            const relatedTask = await upsertedTask
-              .$relatedQuery('labels', trx)
-              .delete()
-              .insert(upsertedTask);
-
-            return relatedTask;
+            const updatedTask = await app.objection.models.task.query(trx)
+              .upsertGraph({ id: taskId, ...validTaskData, labels: labelsIds }, {
+                relate: true, unrelate: true,
+              });
+            return updatedTask;
           });
           req.flash('info', i18next.t('flash.tasks.edit.success'));
           reply.redirect(app.reverse('tasks'));

@@ -3,7 +3,7 @@ import fastify from 'fastify';
 import init from '../server/plugin.js';
 import { getTestData, prepareData } from './helpers/index.js';
 
-describe('test tasks CRUD', () => {
+describe('test labels CRUD', () => {
   let app;
   let knex;
   let models;
@@ -44,55 +44,31 @@ describe('test tasks CRUD', () => {
   it('index', async () => {
     const responseWithOutAuth = await app.inject({
       method: 'GET',
-      url: app.reverse('tasks'),
+      url: app.reverse('labels'),
     });
 
     expect(responseWithOutAuth.statusCode).toBe(302);
 
     const responseWithAuth = await app.inject({
       method: 'GET',
-      url: app.reverse('tasks'),
+      url: app.reverse('labels'),
       cookies: cookie,
     });
 
     expect(responseWithAuth.statusCode).toBe(200);
   });
 
-  it('filter', async () => {
-    const response = await app.inject({
-      method: 'GET',
-      url: '/tasks?status=1&executor=1&creator=2',
-      cookies: cookie,
-    });
-    const url = new URL(response.raw.req.url, 'http://localhost');
-    const statusId = Number(url.searchParams.get('status'));
-    const creatorId = Number(url.searchParams.get('creator'));
-    const executorId = Number(url.searchParams.get('executor'));
-    // console.log(response);
-
-    const expected = await models.task.query()
-      .where({ statusId })
-      .where({ creatorId })
-      .where({ executorId })
-      .skipUndefined();
-
-    expect(response.statusCode).toBe(200);
-
-    const task = await models.task.query().where({ id: 2 });
-    expect(task).toMatchObject(expected);
-  });
-
   it('new', async () => {
     const response = await app.inject({
       method: 'GET',
-      url: app.reverse('newTasks'),
+      url: app.reverse('newLabel'),
     });
 
     expect(response.statusCode).toBe(302);
 
     const responseWithAuth = await app.inject({
       method: 'GET',
-      url: app.reverse('newTasks'),
+      url: app.reverse('newLabel'),
       cookies: cookie,
     });
 
@@ -100,33 +76,31 @@ describe('test tasks CRUD', () => {
   });
 
   it('create', async () => {
-    const params = testData.tasks.new;
+    const params = testData.labels.new;
 
     const response = await app.inject({
       method: 'POST',
-      url: '/tasks',
+      url: app.reverse('labels'),
       cookies: cookie,
       payload: {
-        data: { ...params, labels: [1, 2] },
+        data: params,
       },
     });
 
     expect(response.statusCode).toBe(302);
 
     const expected = params;
-    const task = await models.task.query().findOne({ name: params.name });
-    const relate = await task.$relatedQuery('labels');
-    expect(task).toMatchObject(expected);
-    expect(!!relate).toBeTruthy();
+    const label = await models.label.query().findOne({ name: params.name });
+    expect(label).toMatchObject(expected);
   });
 
   it('update', async () => {
-    const oldParams = testData.tasks.existing;
-    const newParams = { name: 'Buy apples', statusId: 2, executorId: 1 };
+    const oldParams = testData.labels.existing;
+    const newParams = testData.labels.new;
 
     const response = await app.inject({
       method: 'PATCH',
-      url: '/tasks/1',
+      url: '/labels/1',
       cookies: cookie,
       payload: {
         data: newParams,
@@ -136,36 +110,45 @@ describe('test tasks CRUD', () => {
     expect(response.statusCode).toBe(302);
 
     const expected = newParams;
-    const task = await models.task.query().findOne({ name: newParams.name });
-    expect(task).toMatchObject(expected);
+    const label = await models.label.query().findOne({ name: newParams.name });
+    expect(label).toMatchObject(expected);
 
-    const nonExistingTask = await models.task.query().findOne({ name: oldParams.name });
-    expect(nonExistingTask).toBeFalsy();
+    const nonExistingLabel = await models.label.query().findOne({ name: oldParams.name });
+    expect(nonExistingLabel).toBeFalsy();
   });
 
   it('delete', async () => {
-    // Авторизован пользователь с ID=2, поэтому удалится только задача с creatorId=2
-    const params = testData.tasks.existing;
+    const params = testData.labels.existing;
     await app.inject({
       method: 'DELETE',
-      url: '/tasks/1',
-      cookies: cookie,
+      url: '/labels/1',
     });
 
-    const deletedTask = await models.task.query().findOne({ name: params.name });
-    expect(deletedTask).toBeTruthy();
+    const deletedLabel = await models.label.query().findOne({ name: params.name });
+    expect(deletedLabel).toBeTruthy();
 
-    const responseWithAuthCreator = await app.inject({
+    await app.inject({
       method: 'DELETE',
-      url: '/tasks/2',
+      url: '/labels/1',
       cookies: cookie,
     });
 
-    expect(responseWithAuthCreator.statusCode).toBe(302);
+    // метка не удалится потому что связана с задачей
+    const deletedLabel2 = await models.label.query().findOne({ name: params.name });
+    expect(deletedLabel2).toBeTruthy();
 
-    const params2 = testData.tasks.existing2;
-    const deletedTask2 = await models.task.query().findOne({ name: params2.name });
-    expect(deletedTask2).toBeFalsy();
+    const params2 = testData.labels.existing2;
+
+    const responseWithAuth = await app.inject({
+      method: 'DELETE',
+      url: '/labels/2',
+      cookies: cookie,
+    });
+
+    expect(responseWithAuth.statusCode).toBe(302);
+
+    const deletedLabel3 = await models.label.query().findOne({ name: params2.name });
+    expect(deletedLabel3).toBeFalsy();
   });
 
   afterEach(async () => {
