@@ -5,44 +5,29 @@ export default (app) => {
   const { models } = app.objection;
   app
     .get('/tasks', { name: 'tasks' }, async (req, reply) => {
-      const queryData = Object.entries(req.query)
-        .filter(([, value]) => value)
-        .reduce((acc, [key, value]) => {
-          acc[key] = value;
-          return acc;
-        }, {});
-      if (req.query.isCreatorUser) {
-        queryData.creator = req.user.id;
-      }
+      const {
+        label, executor, status, isCreatorUser,
+      } = req.query;
+      const { id } = req.user;
 
       if (req.isAuthenticated()) {
-        let tasks;
-        if (queryData.label) {
-          const filteredLabelTasks = await models.label.query().findById(queryData.label);
-          tasks = await filteredLabelTasks.$relatedQuery('tasks')
-            .skipUndefined()
-            .where({ statusId: queryData.status })
-            .where({ executorId: queryData.executor })
-            .where({ creatorId: queryData.creator })
-            .skipUndefined();
-        } else {
-          tasks = await models.task.query()
-            .where({ statusId: queryData.status })
-            .where({ executorId: queryData.executor })
-            .where({ creatorId: queryData.creator })
-            .skipUndefined();
+        const tasksQuery = models.task.query().withGraphJoined('[creators, executors, statuses, labels]');
+
+        tasksQuery.skipUndefined().modify('filterExecutor', executor || undefined);
+        tasksQuery.skipUndefined().modify('filterStatus', status || undefined);
+        tasksQuery.skipUndefined().modify('filterLabel', label || undefined);
+        if (isCreatorUser) {
+          tasksQuery.skipUndefined().modify('filterCreator', id || undefined);
         }
 
+        const tasks = await tasksQuery;
         const users = await models.user.query();
         const labels = await models.label.query();
         const statuses = await models.status.query();
 
+        console.log(statuses);
         reply.render('tasks/index', {
-          tasks,
-          statuses,
-          users,
-          labels,
-          query: queryData,
+          tasks, statuses, users, labels, query: req.query,
         });
       } else {
         req.flash('error', i18next.t('flash.authError'));
@@ -58,10 +43,7 @@ export default (app) => {
         const users = await models.user.query();
         const labels = await models.label.query();
         reply.render('tasks/new', {
-          task,
-          statuses,
-          users,
-          labels,
+          task, statuses, users, labels,
         });
       } else {
         req.flash('error', i18next.t('flash.authError'));
@@ -105,11 +87,7 @@ export default (app) => {
         req.flash('error', i18next.t('flash.tasks.create.error'));
         req.flash('error', error.message);
         reply.render('tasks/new', {
-          task: formData,
-          statuses,
-          users,
-          labels,
-          errors: error.data,
+          task: formData, statuses, users, labels, errors: error.data,
         });
       }
       return reply;
@@ -125,11 +103,7 @@ export default (app) => {
         const labels = await task.$relatedQuery('labels');
 
         reply.render('tasks/view', {
-          task,
-          status,
-          creator,
-          executor,
-          labels,
+          task, status, creator, executor, labels,
         });
       } else {
         req.flash('error', i18next.t('flash.authError'));
@@ -147,11 +121,7 @@ export default (app) => {
         const labels = await models.label.query();
         const selectedLabels = await task.$relatedQuery('labels');
         reply.render('tasks/edit', {
-          task,
-          statuses,
-          users,
-          labels,
-          selectedLabels,
+          task, statuses, users, labels, selectedLabels,
         });
       } else {
         req.flash('error', i18next.t('flash.authError'));
@@ -198,12 +168,7 @@ export default (app) => {
         req.flash('error', i18next.t('flash.tasks.edit.error'));
         req.flash('error', error.message);
         reply.render('tasks/edit', {
-          task: formData,
-          statuses,
-          users,
-          labels,
-          selectedLabels,
-          errors: error.data,
+          task: formData, statuses, users, labels, selectedLabels, errors: error.data,
         });
       }
       return reply;

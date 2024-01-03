@@ -28,6 +28,24 @@ module.exports = class Task extends unique(BaseModel) {
     };
   }
 
+  static modifiers = {
+    filterCreator(queryBilder, creatorId) {
+      queryBilder.where('creatorId', creatorId);
+    },
+
+    filterExecutor(queryBilder, executorId) {
+      queryBilder.where('executorId', executorId);
+    },
+
+    filterStatus(queryBilder, statusId) {
+      queryBilder.where('statusId', statusId);
+    },
+
+    filterLabel(queryBilder, labelId) {
+      queryBilder.where('labels.id', labelId);
+    },
+  };
+
   static relationMappings = {
     creators: {
       relation: BaseModel.BelongsToOneRelation,
