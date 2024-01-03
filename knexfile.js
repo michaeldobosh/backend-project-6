@@ -27,9 +27,13 @@ export const test = {
 };
 
 export const production = {
-  client: 'sqlite3',
+  client: 'pg',
   connection: {
-    filename: path.resolve(__dirname, 'database.sqlite'),
+    host: '0.0.0.0',
+    port: 10000,
+    user: 'postgres',
+    database: 'my_db',
+    password: 'postgres',
   },
   useNullAsDefault: true,
   migrations,
