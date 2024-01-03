@@ -73,8 +73,7 @@ describe('test tasks CRUD', () => {
     const expected = await models.task.query()
       .where({ statusId })
       .where({ creatorId })
-      .where({ executorId })
-      .skipUndefined();
+      .where({ executorId });
 
     expect(response.statusCode).toBe(200);
 
