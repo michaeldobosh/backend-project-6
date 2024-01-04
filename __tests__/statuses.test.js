@@ -119,6 +119,8 @@ describe('test statuses CRUD', () => {
 
   it('delete', async () => {
     const params = testData.statuses.existing;
+
+    // попытка удалить без авторизации
     await app.inject({
       method: 'DELETE',
       url: '/statuses/1',
@@ -127,6 +129,7 @@ describe('test statuses CRUD', () => {
     const deletedStatus = await models.status.query().findOne({ name: params.name });
     expect(deletedStatus).toBeTruthy();
 
+    // попытка удалить статус, связанный с задачей
     await app.inject({
       method: 'DELETE',
       url: '/statuses/1',
@@ -136,6 +139,7 @@ describe('test statuses CRUD', () => {
     const deletedStatus2 = await models.status.query().findOne({ name: params.name });
     expect(deletedStatus2).toBeTruthy();
 
+    // удаляем несвязанный статус
     const params2 = testData.statuses.existing2;
     const responseWithAuth = await app.inject({
       method: 'DELETE',
@@ -153,6 +157,8 @@ describe('test statuses CRUD', () => {
     // Пока Segmentation fault: 11
     // после каждого теста откатываем миграции
     await knex('statuses').truncate();
+    await knex('tasks').truncate();
+    await knex('users').truncate();
   });
 
   afterAll(async () => {

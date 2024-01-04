@@ -127,13 +127,13 @@ describe('test labels CRUD', () => {
     const deletedLabel = await models.label.query().findOne({ name: params.name });
     expect(deletedLabel).toBeTruthy();
 
+    // метка не удалится потому что связана с задачей
     await app.inject({
       method: 'DELETE',
       url: '/labels/1',
       cookies: cookie,
     });
 
-    // метка не удалится потому что связана с задачей
     const deletedLabel2 = await models.label.query().findOne({ name: params.name });
     expect(deletedLabel2).toBeTruthy();
 
