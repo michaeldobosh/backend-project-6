@@ -130,14 +130,15 @@ describe('test users CRUD', () => {
       cookies: cookie,
     });
 
-    // повторная попвтка удалить пользователя
+    // повторная попытка удалить пользователя
     await app.inject({
       method: 'DELETE',
       url: '/users/2',
       cookies: cookie,
     });
 
-    const deletedUser2 = await models.user.query().findOne({ email: params.email });
+    const deletedUser2 = await models.user.query().findById(2);
+
     expect(deletedUser2).toBeFalsy();
   });
 

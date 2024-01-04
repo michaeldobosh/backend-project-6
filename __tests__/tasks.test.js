@@ -68,7 +68,6 @@ describe('test tasks CRUD', () => {
     const statusId = Number(url.searchParams.get('status'));
     const creatorId = Number(url.searchParams.get('creator'));
     const executorId = Number(url.searchParams.get('executor'));
-    // console.log(response);
 
     const expected = await models.task.query()
       .where({ statusId })

@@ -154,7 +154,7 @@ describe('test labels CRUD', () => {
   afterEach(async () => {
     // Пока Segmentation fault: 11
     // после каждого теста откатываем миграции
-    await knex.migrate.rollback();
+    await knex('labels').truncate();
   });
 
   afterAll(async () => {

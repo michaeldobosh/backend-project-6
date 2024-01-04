@@ -23,7 +23,6 @@ export default (app) => {
         const labels = await models.label.query();
         const statuses = await models.status.query();
 
-        console.log(statuses);
         reply.render('tasks/index', {
           tasks, statuses, users, labels, query: req.query,
         });
