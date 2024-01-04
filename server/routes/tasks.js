@@ -82,7 +82,6 @@ export default (app) => {
         }
       } catch (error) {
         req.flash('error', i18next.t('flash.tasks.create.error'));
-        req.flash('error', error.message);
         reply.render('tasks/new', {
           task: formData, statuses, users, labels, errors: error.data,
         });

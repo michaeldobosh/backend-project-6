@@ -68,17 +68,21 @@ export default (app) => {
       const hasRelation = !![...creators, ...executors].find((user) => user.id === Number(id));
       const isCurrent = selectedUser.id === Number(currentUser?.id);
 
-      if (req.isAuthenticated() && isCurrent && !hasRelation) {
+      try {
+        if (!req.isAuthenticated() || !isCurrent) {
+          req.flash('error', i18next.t('flash.authError'));
+          reply.redirect(app.reverse('root'));
+          return reply;
+        }
+        if (hasRelation) throw Error;
         req.logOut();
         await models.user.query().delete().where({ id });
         req.flash('info', i18next.t('flash.users.delete.success'));
         reply.redirect(app.reverse('root'));
-      } else if (!req.isAuthenticated() || !isCurrent) {
-        req.flash('error', i18next.t('flash.authError'));
-        reply.redirect(app.reverse('root'));
-      } else {
+      } catch (error) {
         req.flash('error', i18next.t('flash.users.delete.error'));
-        reply.redirect(app.reverse('root'));
+        reply.redirect(app.reverse('users'));
       }
+      return reply;
     });
 };
