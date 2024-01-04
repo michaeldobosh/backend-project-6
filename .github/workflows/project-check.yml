@@ -1,4 +1,7 @@
-# NodeJs
+# Name of workflow
+name: Check lint, test, coverage
+
+# Trigger the workflow on push or pull request
 on:
   - push
 
