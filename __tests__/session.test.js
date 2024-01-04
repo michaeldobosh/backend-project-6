@@ -56,7 +56,6 @@ describe('test session', () => {
   });
 
   afterAll(async () => {
-    await knex('session').truncate();
     await app.close();
   });
 });
