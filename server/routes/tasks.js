@@ -13,12 +13,10 @@ export default (app) => {
       if (req.isAuthenticated()) {
         const tasksQuery = models.task.query().withGraphJoined('[creators, executors, statuses, labels]');
 
-        tasksQuery.skipUndefined().modify('filterExecutor', executor || undefined);
-        tasksQuery.skipUndefined().modify('filterStatus', status || undefined);
-        tasksQuery.skipUndefined().modify('filterLabel', label || undefined);
-        if (isCreatorUser) {
-          tasksQuery.skipUndefined().modify('filterCreator', userId || undefined);
-        }
+        if (executor) tasksQuery.modify('filterExecutor', executor);
+        if (status) tasksQuery.modify('filterStatus', status);
+        if (label) tasksQuery.modify('filterLabel', label);
+        if (isCreatorUser) tasksQuery.modify('filterCreator', userId);
 
         const tasks = await tasksQuery;
         const users = await models.user.query();
