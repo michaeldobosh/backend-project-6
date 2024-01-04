@@ -1,6 +1,6 @@
 # Task Manager application
 
-[![Node CI](https://github.com/hexlet-boilerplates/fastify-nodejs-application/workflows/Node%20CI/badge.svg)](https://github.com/hexlet-boilerplates/fastify-nodejs-application/actions)
+[![Node CI](https://github.com/michaeldobosh/backend-project-6/workflows/Node%20CI/badge.svg)](https://github.com/hexlet-boilerplates/fastify-nodejs-application/actions)
 [![Code Climate](https://api.codeclimate.com/v1/badges/a72a0784d91092956a85/maintainability)](https://codeclimate.com/github/michaeldobosh/backend-project-6/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/a72a0784d91092956a85/test_coverage)](https://codeclimate.com/github/michaeldobosh/backend-project-6/test_coverage)
 
