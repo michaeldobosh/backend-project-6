@@ -66,8 +66,8 @@ mixin filterSelect(entity, propertyName)
     .input-group.mb-3
       - classLine = 'form-control' + (_.isEmpty(propertyErrors) ? '' : ' is-invalid')
       - selectId = getInputId(propertyName)
-      - getName = (item) => propertyName == 'executorId' ? `${item.firstName} ${item.lastName}` : item.name
-        label(class='input-group-text' for=selectId)=t(`views.tasks.${propertyName.replace('Id', '')}`)
+      - getName = (item) => propertyName == 'executor' ? `${item.firstName} ${item.lastName}` : item.name
+        label(class='input-group-text' for=selectId)=t(`views.tasks.${propertyName}`)
         select(
           id=selectId
           class='form-select'

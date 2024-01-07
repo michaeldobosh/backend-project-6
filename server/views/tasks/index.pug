@@ -8,8 +8,8 @@ block content
   .my-5.p-4.card
     +formFor()(action='/tasks' method='GET')
       .row
-        +filterSelect(statuses, 'statusId')
-        +filterSelect(users, 'executorId')
+        +filterSelect(statuses, 'status')
+        +filterSelect(users, 'executor')
         +filterSelect(labels, 'label')
       .form-check
         input(
