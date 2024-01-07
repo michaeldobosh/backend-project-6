@@ -46,7 +46,7 @@ mixin select(entity, entityName, propertyName, errors = {})
     - selectId = getInputId(propertyName)
     - isMultiple = propertyName == 'labels'
     - getName = (item) => propertyName == 'executorId' ? `${item.firstName} ${item.lastName}` : item.name
-      label(for=selectId)=t(`views.${entityName}.${propertyName}`)
+      label(for=selectId)=t(`views.${entityName}.${propertyName.replace('Id', '')}`)
       select(
         id=selectId
         class=classLine
@@ -67,7 +67,7 @@ mixin filterSelect(entity, propertyName)
       - classLine = 'form-control' + (_.isEmpty(propertyErrors) ? '' : ' is-invalid')
       - selectId = getInputId(propertyName)
       - getName = (item) => propertyName == 'executorId' ? `${item.firstName} ${item.lastName}` : item.name
-        label(class='input-group-text' for=selectId)=t(`views.tasks.${propertyName}`)
+        label(class='input-group-text' for=selectId)=t(`views.tasks.${propertyName.replace('Id', '')}`)
         select(
           id=selectId
           class='form-select'
