@@ -68,9 +68,9 @@ mixin select(entity, entityName, propertyName, errors = {})
 mixin filterSelect(entity, entityName, propertyName)
   .col-12.col-md
     .input-group.mb-3
-      - name = propertyName == 'labels' ? propertyName : propertyName + 'Id'
+      - name = propertyName == 'label' ? propertyName : propertyName + 'Id'
       - classLine = 'form-control' + (_.isEmpty(propertyErrors) ? '' : ' is-invalid')
-      - selectId = getInputId(name)
+      - selectId = getInputId(propertyName)
       - isSelected = (item, items) => !!items.find((el) => el?.id == item?.id)
       - getName = (item) => propertyName == 'executor' ? `${item.firstName} ${item.lastName}` : item.name
         label(class='input-group-text' for=selectId)=t(`views.${entityName}.${propertyName}`)
