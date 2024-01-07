@@ -10,7 +10,7 @@ block content
       .row
             +filterSelect(statuses, 'tasks', 'statusId')
             +filterSelect(users, 'tasks', 'executorId')
-            +filterSelect(labels, 'tasks', 'label')
+            +filterSelect(labels, 'tasks', 'labels')
       .form-check
         input(class='form-check-input', type='checkbox', value=checked, id='data_isCreatorUser' name='isCreatorUser' checked=query.isCreatorUser)
         label(class='form-check-label', for='data_isCreatorUser')=t('views.tasks.only_my_tasks')
