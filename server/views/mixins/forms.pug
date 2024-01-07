@@ -64,11 +64,9 @@ mixin select(entity, entityName, propertyName, errors = {})
 mixin filterSelect(entity, entityName, propertyName)
   .col-12.col-md
     .input-group.mb-3
-      - name = propertyName == 'label' ? propertyName : propertyName + 'Id'
       - classLine = 'form-control' + (_.isEmpty(propertyErrors) ? '' : ' is-invalid')
       - selectId = getInputId(propertyName)
-      - isSelected = (item, items) => !!items.find((el) => el?.id == item?.id)
-      - getName = (item) => propertyName == 'executor' ? `${item.firstName} ${item.lastName}` : item.name
+      - getName = (item) => propertyName == 'executorId' ? `${item.firstName} ${item.lastName}` : item.name
         label(class='input-group-text' for=selectId)=t(`views.${entityName}.${propertyName}`)
         select(
           id=selectId
@@ -78,6 +76,6 @@ mixin filterSelect(entity, entityName, propertyName)
           option=''
           each item in entity
             if item.id == query[propertyName]
-              option(selected value=item.id)=getName(item)
+              option(value=item.id selected)=getName(item)
             else
               option(value=item.id)=getName(item)

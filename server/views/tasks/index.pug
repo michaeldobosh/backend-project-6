@@ -8,8 +8,8 @@ block content
   .my-5.p-4.card
     +formFor()(action='/tasks' method='GET')
       .row
-            +filterSelect(statuses, 'tasks', 'status')
-            +filterSelect(users, 'tasks', 'executor')
+            +filterSelect(statuses, 'tasks', 'statusId')
+            +filterSelect(users, 'tasks', 'executorId')
             +filterSelect(labels, 'tasks', 'label')
       .form-check
         input(class='form-check-input', type='checkbox', value=checked, id='data_isCreatorUser' name='isCreatorUser' checked=query.isCreatorUser)
