@@ -8,11 +8,16 @@ block content
   .my-5.p-4.card
     +formFor()(action='/tasks' method='GET')
       .row
-            +filterSelect(statuses, 'tasks', 'statusId')
-            +filterSelect(users, 'tasks', 'executorId')
-            +filterSelect(labels, 'tasks', 'labels')
+        +filterSelect(statuses, 'statusId')
+        +filterSelect(users, 'executorId')
+        +filterSelect(labels, 'label')
       .form-check
-        input(class='form-check-input', type='checkbox', value=checked, id='data_isCreatorUser' name='isCreatorUser' checked=query.isCreatorUser)
+        input(
+          class='form-check-input',
+          type='checkbox', value=checked,
+          id='data_isCreatorUser'
+          name='isCreatorUser'
+          checked=query.isCreatorUser)
         label(class='form-check-label', for='data_isCreatorUser')=t('views.tasks.only_my_tasks')
       .row
         .input-group.mt-3
