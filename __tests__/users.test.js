@@ -88,7 +88,7 @@ describe('test users CRUD', () => {
 
     const response = await app.inject({
       method: 'PATCH',
-      url: '/users/2',
+      url: app.reverse('updateUser', { id: '2' }),
       cookies: cookie,
       payload: {
         data: newParams,
@@ -113,7 +113,7 @@ describe('test users CRUD', () => {
     // пытаемся удалить с правами пользователя
     const response = await app.inject({
       method: 'DELETE',
-      url: '/users/2',
+      url: app.reverse('deleteUser', { id: '2' }),
       cookies: cookie,
     });
 
@@ -126,14 +126,14 @@ describe('test users CRUD', () => {
     // удаляем задачу, с которой связан авторизированный пользователь и которая им же создана
     await app.inject({
       method: 'DELETE',
-      url: '/tasks/2',
+      url: app.reverse('deleteTask', { id: '2' }),
       cookies: cookie,
     });
 
     // повторная попытка удалить пользователя
     await app.inject({
       method: 'DELETE',
-      url: '/users/2',
+      url: app.reverse('deleteUser', { id: '2' }),
       cookies: cookie,
     });
 

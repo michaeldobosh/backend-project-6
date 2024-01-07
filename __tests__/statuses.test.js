@@ -100,7 +100,7 @@ describe('test statuses CRUD', () => {
 
     const response = await app.inject({
       method: 'PATCH',
-      url: '/statuses/1',
+      url: app.reverse('updateStatus', { id: '1' }),
       cookies: cookie,
       payload: {
         data: newParams,
@@ -123,7 +123,7 @@ describe('test statuses CRUD', () => {
     // попытка удалить без авторизации
     await app.inject({
       method: 'DELETE',
-      url: '/statuses/1',
+      url: app.reverse('deleteStatus', { id: '1' }),
     });
 
     const deletedStatus = await models.status.query().findOne({ name: params.name });
@@ -132,7 +132,7 @@ describe('test statuses CRUD', () => {
     // попытка удалить статус, связанный с задачей
     await app.inject({
       method: 'DELETE',
-      url: '/statuses/1',
+      url: app.reverse('deleteStatus', { id: '1' }),
       cookies: cookie,
     });
 
@@ -143,7 +143,7 @@ describe('test statuses CRUD', () => {
     const params2 = testData.statuses.existing2;
     const responseWithAuth = await app.inject({
       method: 'DELETE',
-      url: '/statuses/3',
+      url: app.reverse('deleteStatus', { id: '3' }),
       cookies: cookie,
     });
 

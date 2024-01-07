@@ -5,20 +5,6 @@ block header
 
 block content
   .container
-    form(action=`/labels/${label.id}`, method='POST')
-      - propertyErrors = _.get(errors, 'name')
-      - classLine = 'form-control' + (_.isEmpty(propertyErrors) ? '' : ' is-invalid')
-      .mb-3(class=(errors && 'has-danger')).form-floating
-        input(
-        class=classLine,
-        type="text",
-        id='data_name',
-        placeholder=t('views.labels.name')
-        name='data[name]',
-        value=_.get(label, 'name', ''))
-
-        if !_.isEmpty(propertyErrors)
-          .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
-        label(for='data_name')=t('views.labels.name')
-      input(name='_method' type='hidden' value='PATCH')
-      input.btn.btn-primary(type='submit', value=t('views.labels.actions.edit'))
+    form(action=`/labels/${label.id}` method='post')
+      +input(label, 'labels', 'name', errors)(type="text")
+      +buttonTo(`/statuses/${label.id}`, 'PATCH')(value=t('views.labels.actions.edit')).btn.btn-primary

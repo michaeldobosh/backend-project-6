@@ -10,6 +10,6 @@ block content
       img(src=assetPath('assets/task-manager.png') alt="task manager" width="75%")
     .container
       +formFor()(action=route('session') method='post')
-        +input(signInForm, 'email', errors)(type="text")
-        +input(signInForm, 'password')(type="password")
+        +input(signInForm, 'users', 'email', errors)(type="text")
+        +input(signInForm, 'users', 'password')(type="password")
         +submit(signInForm)(value=t('views.session.new.submit'))

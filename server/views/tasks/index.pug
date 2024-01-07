@@ -6,38 +6,11 @@ block header
 
 block content
   .my-5.p-4.card
-    form(action='/tasks', method="GET")
+    +formFor()(action='/tasks' method='GET')
       .row
-        .col-12.col-md
-          .input-group.mb-3
-            label(class='input-group-text', for='data_status')=t('views.tasks.status')
-            select(name='status', id='data_status').form-select
-              option=''
-              each status in statuses
-                if status.id == query.status
-                  option(selected value=status.id)=status.name
-                else
-                  option(value=status.id)=status.name
-        .col-12.col-md
-          .input-group.mb-3
-            label(class='input-group-text', for='data_executor')=t('views.tasks.executor')
-            select(name='executor', id='data_executor').form-select
-              option=''
-              each user in users
-                if user.id == query.executor
-                  option(selected value=user.id)=user.firstName + ' ' + user.lastName
-                else
-                  option(value=user.id)=user.firstName + ' ' + user.lastName
-        .col-12.col-md
-          .input-group.mb-3
-            label(class='input-group-text', for='data_label')=t('views.tasks.label')
-            select(name='label', id='data_label').form-select
-              option=''
-              each label in labels
-                if label.id == query.label
-                  option(selected value=label.id)=label.name
-                else
-                  option(value=label.id)=label.name
+            +filterSelect(statuses, 'tasks', 'status')
+            +filterSelect(users, 'tasks', 'executor')
+            +filterSelect(labels, 'tasks', 'label')
       .form-check
         input(class='form-check-input', type='checkbox', value=checked, id='data_isCreatorUser' name='isCreatorUser' checked=query.isCreatorUser)
         label(class='form-check-label', for='data_isCreatorUser')=t('views.tasks.only_my_tasks')
@@ -67,7 +40,10 @@ block content
           - const executor = getDataById(task.executorId, users)
           td= status.name
           td= creator.firstName + ' ' + creator.lastName
-          td= executor.firstName + ' ' + executor.lastName
+          if (executor)
+            td= executor.firstName + ' ' + executor.lastName
+          else 
+            td
           td= formatDate(task.createdAt)
           td.d-flex
             a(href=`/tasks/${task.id}/edit` class='btn btn-primary me-1')=t('views.tasks.actions.edit')

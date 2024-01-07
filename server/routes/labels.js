@@ -3,91 +3,66 @@ import i18next from 'i18next';
 export default (app) => {
   const { models } = app.objection;
   app
-    .get('/labels', { name: 'labels' }, async (req, reply) => {
+    .get('/labels', { name: 'labels', preValidation: app.authenticate }, async (req, reply) => {
       const labels = await models.label.query();
-
-      if (req.isAuthenticated()) {
-        reply.render('labels/index', { labels });
-      } else {
-        req.flash('error', i18next.t('flash.authError'));
-        reply.redirect(app.reverse('root'));
-      }
+      reply.render('labels/index', { labels });
       return reply;
     })
-    .get('/labels/new', { name: 'newLabel' }, async (req, reply) => {
+    .get('/labels/new', { name: 'newLabel', preValidation: app.authenticate }, async (req, reply) => {
       const label = new models.label();
 
-      if (req.isAuthenticated()) {
-        reply.render('labels/new', { label });
-      } else {
-        req.flash('error', i18next.t('flash.authError'));
-        reply.redirect(app.reverse('root'));
-      }
+      reply.render('labels/new', { label });
       return reply;
     })
-    .post('/labels', { name: 'createLabel' }, async (req, reply) => {
+    .post('/labels', { name: 'createLabel', preValidation: app.authenticate }, async (req, reply) => {
+      req.body.data.name = req.body.data.name.trim();
       const label = new models.label();
       label.$set(req.body.data);
 
       try {
-        if (req.isAuthenticated()) {
-          const validlabel = await models.label.fromJson(req.body.data);
-          validlabel.name = validlabel.name.trim();
-          await models.label.query().insert(validlabel);
-          req.flash('info', i18next.t('flash.labels.create.success'));
-          reply.redirect(app.reverse('labels'));
-        } else {
-          req.flash('error', i18next.t('flash.authError'));
-          reply.redirect(app.reverse('root'));
-        }
+        const validlabel = await models.label.fromJson(req.body.data);
+        await models.label.query().insert(validlabel);
+        req.flash('info', i18next.t('flash.labels.create.success'));
+        reply.redirect(app.reverse('labels'));
       } catch ({ data }) {
         req.flash('error', i18next.t('flash.labels.create.error'));
         reply.render('labels/new', { label, errors: data });
       }
       return reply;
     })
-    .get('/labels/:id/edit', async (req, reply) => {
-      const selectedlabelId = req.params.id;
-      const label = await models.label.query().findOne({ id: selectedlabelId });
+    .get('/labels/:id/edit', { name: 'editLabel', preValidation: app.authenticate }, async (req, reply) => {
+      const labelId = req.params.id;
+      const label = await models.label.query().findOne({ id: labelId });
 
-      if (req.isAuthenticated()) {
-        reply.render('labels/edit', { label });
-      } else {
-        req.flash('error', i18next.t('flash.authError'));
-        reply.redirect(app.reverse('root'));
-      }
+      reply.render('labels/edit', { label });
       return reply;
     })
-    .patch('/labels/:id', async (req, reply) => {
-      const { id } = req.params;
+    .patch('/labels/:id', { name: 'updateLabel', preValidation: app.authenticate }, async (req, reply) => {
+      const labelId = req.params.id;
+      req.body.data.name = req.body.data.name.trim();
       const label = new models.label();
       label.$set(req.body.data);
 
       try {
-        if (req.isAuthenticated()) {
-          const validlabel = await models.label.fromJson(req.body.data);
-          const selectedlabel = await models.label.query().findOne({ id });
-          await selectedlabel.$query().patch(validlabel);
-          req.flash('info', i18next.t('flash.labels.edit.success'));
-          reply.redirect(app.reverse('labels'));
-        } else {
-          req.flash('error', i18next.t('flash.authError'));
-          reply.redirect(app.reverse('root'));
-        }
+        const validlabel = await models.label.fromJson(req.body.data);
+        const selectedlabel = await models.label.query().findOne({ id: labelId });
+        await selectedlabel.$query().patch(validlabel);
+        req.flash('info', i18next.t('flash.labels.edit.success'));
+        reply.redirect(app.reverse('labels'));
       } catch ({ data }) {
         req.flash('error', i18next.t('flash.labels.edit.error'));
         reply.render('labels/edit', { label, errors: data });
       }
       return reply;
     })
-    .delete('/labels/:id', { name: 'deleteLabel' }, async (req, reply) => {
-      const { id } = req.params;
+    .delete('/labels/:id', { name: 'deleteLabel', preValidation: app.authenticate }, async (req, reply) => {
+      const labelId = req.params.id;
       const tasks = await models.task.query();
       const labels = await models.task.relatedQuery('labels').for(tasks);
-      const hasRelation = !!labels.find((label) => label.id === Number(id));
+      const hasRelation = !!labels.find((label) => label.id === Number(labelId));
 
-      if (req.isAuthenticated() && !hasRelation) {
-        await models.label.query().delete().where({ id });
+      if (!hasRelation) {
+        await models.label.query().delete().where({ id: labelId });
         req.flash('info', i18next.t('flash.labels.delete.success'));
         reply.redirect(app.reverse('labels'));
       } else {

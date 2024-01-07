@@ -14,8 +14,7 @@ block content
         if (labels)
           for label in labels
             .badge.bg-info.ms-1= label.name
-        if (creator)
-          p= `${t('views.tasks.author')} ${creator.firstName} ${creator.lastName}`
+        p= `${t('views.tasks.author')} ${creator.firstName} ${creator.lastName}`
         if (executor)
           p= `${t('views.tasks.executor')} ${executor.firstName} ${executor.lastName}`
         p= `${t('views.tasks.createdAt')} ${formatDate(task.createdAt)}`

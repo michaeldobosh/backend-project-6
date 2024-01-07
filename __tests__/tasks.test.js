@@ -102,7 +102,7 @@ describe('test tasks CRUD', () => {
 
     const response = await app.inject({
       method: 'POST',
-      url: '/tasks',
+      url: app.reverse('createTask'),
       cookies: cookie,
       payload: {
         data: { ...params, labels: [1, 2] },
@@ -124,7 +124,7 @@ describe('test tasks CRUD', () => {
 
     const response = await app.inject({
       method: 'PATCH',
-      url: '/tasks/1',
+      url: app.reverse('updateTask', { id: '1' }),
       cookies: cookie,
       payload: {
         data: newParams,
@@ -146,7 +146,7 @@ describe('test tasks CRUD', () => {
     const params = testData.tasks.existing;
     await app.inject({
       method: 'DELETE',
-      url: '/tasks/1',
+      url: app.reverse('deleteTask', { id: '1' }),
       cookies: cookie,
     });
 
@@ -155,7 +155,7 @@ describe('test tasks CRUD', () => {
 
     const responseWithAuthCreator = await app.inject({
       method: 'DELETE',
-      url: '/tasks/2',
+      url: app.reverse('deleteTask', { id: '2' }),
       cookies: cookie,
     });
 

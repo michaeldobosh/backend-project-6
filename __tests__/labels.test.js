@@ -100,7 +100,7 @@ describe('test labels CRUD', () => {
 
     const response = await app.inject({
       method: 'PATCH',
-      url: '/labels/1',
+      url: app.reverse('updateLabel', { id: '1' }),
       cookies: cookie,
       payload: {
         data: newParams,
@@ -121,7 +121,7 @@ describe('test labels CRUD', () => {
     const params = testData.labels.existing;
     await app.inject({
       method: 'DELETE',
-      url: '/labels/1',
+      url: app.reverse('deleteLabel', { id: '1' }),
     });
 
     const deletedLabel = await models.label.query().findOne({ name: params.name });
@@ -130,7 +130,7 @@ describe('test labels CRUD', () => {
     // метка не удалится потому что связана с задачей
     await app.inject({
       method: 'DELETE',
-      url: '/labels/1',
+      url: app.reverse('deleteLabel', { id: '1' }),
       cookies: cookie,
     });
 
@@ -141,7 +141,7 @@ describe('test labels CRUD', () => {
 
     const responseWithAuth = await app.inject({
       method: 'DELETE',
-      url: '/labels/2',
+      url: app.reverse('deleteLabel', { id: '2' }),
       cookies: cookie,
     });
 
