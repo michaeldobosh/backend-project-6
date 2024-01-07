@@ -25,7 +25,7 @@ lint:
 	npx eslint .
 	
 test-coverage:
-	NODE_OPTIONS=--experimental-vm-modules npx jest --bail --coverage --coverageProvider=v8 --unhandled-rejections=strict
+	npm test -- --coverage --coverageProvider=v8
 
 test:
 	npm test -s
