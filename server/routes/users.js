@@ -81,7 +81,7 @@ export default (app) => {
         req.logOut();
         await models.user.query().delete().where({ id });
         req.flash('info', i18next.t('flash.users.delete.success'));
-        reply.redirect(app.reverse('root'));
+        reply.redirect(app.reverse('users'));
       } catch (error) {
         req.flash('error', i18next.t('flash.users.delete.error'));
         reply.redirect(app.reverse('users'));
