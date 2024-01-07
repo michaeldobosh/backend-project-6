@@ -56,7 +56,7 @@ mixin select(entity, entityName, propertyName, errors = {})
         if propertyName != 'labels'
           option=''
         each item in entity
-          - isSelected = Number(item.id) === Number(task[propertyName]) || selectedLabelsIds?.includes(item.id)
+          - isSelected = Number(item.id) === Number(task[propertyName]) ?? selectedLabelsIds?.includes(item.id)
           option(value=item.id selected=isSelected)=getName(item)
       if !_.isEmpty(propertyErrors)
         .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
@@ -64,7 +64,6 @@ mixin select(entity, entityName, propertyName, errors = {})
 mixin filterSelect(entity, propertyName)
   .col-12.col-md
     .input-group.mb-3
-      - classLine = 'form-control' + (_.isEmpty(propertyErrors) ? '' : ' is-invalid')
       - selectId = getInputId(propertyName)
       - getName = (item) => propertyName == 'executor' ? `${item.firstName} ${item.lastName}` : item.name
         label(class='input-group-text' for=selectId)=t(`views.tasks.${propertyName}`)
