@@ -41,27 +41,23 @@ mixin textarea(entity, entityName, propertyName)
 
 mixin select(entity, entityName, propertyName, errors = {})
   .mb-3
-    - name = propertyName == 'labels' ? propertyName : propertyName + 'Id'
-    - propertyErrors = _.get(errors, name)
+    - propertyErrors = _.get(errors, propertyName)
     - classLine = 'form-control' + (_.isEmpty(propertyErrors) ? '' : ' is-invalid')
-    - selectId = getInputId(name)
+    - selectId = getInputId(propertyName)
     - isMultiple = propertyName == 'labels'
-    - isSelected = (item, items) => !!items.find((el) => el?.id == item?.id)
-    - getName = (item) => propertyName == 'executor' ? `${item.firstName} ${item.lastName}` : item.name
+    - getName = (item) => propertyName == 'executorId' ? `${item.firstName} ${item.lastName}` : item.name
       label(for=selectId)=t(`views.${entityName}.${propertyName}`)
       select(
         id=selectId
         class=classLine
-        name=getInputName(name)
+        name=getInputName(propertyName)
         multiple=isMultiple
       )&attributes(attributes)
         if name != 'labels'
           option=''
         each item in entity
-          if selectedLabels && (isSelected(item, selectedLabels) || item.id == task[name])
-            option(selected value=item.id)=getName(item)
-          else
-            option(value=item.id)=getName(item)
+          - isSelected = Number(item.id) === Number(task[propertyName]) || selectedLabelsIds?.includes(item.id)
+          option(value=item.id selected=isSelected)=getName(item)
       if !_.isEmpty(propertyErrors)
         .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
 

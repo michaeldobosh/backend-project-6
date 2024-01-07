@@ -98,8 +98,9 @@ export default (app) => {
       const users = await models.user.query();
       const labels = await models.label.query();
       const selectedLabels = await task.$relatedQuery('labels');
+      const selectedLabelsIds = selectedLabels.map((label) => label?.id);
       reply.render('tasks/edit', {
-        task, statuses, users, labels, selectedLabels,
+        task, statuses, users, labels, selectedLabelsIds,
       });
 
       return reply;
@@ -121,6 +122,7 @@ export default (app) => {
       const users = await models.user.query();
       const labels = await models.label.query();
       const selectedLabels = await models.task.relatedQuery('labels').for(selectedTask);
+      const selectedLabelsIds = selectedLabels.map((label) => label?.id);
 
       try {
         const validTaskData = await models.task.fromJson(taskData);
@@ -141,7 +143,7 @@ export default (app) => {
           statuses,
           users,
           labels,
-          selectedLabels,
+          selectedLabelsIds,
           errors: error.data,
         });
       }
