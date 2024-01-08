@@ -27,7 +27,7 @@ export const test = {
 };
 
 export const production = {
-  client: 'pg',
+  client: 'postgresql',
   connection: {
     host: '0.0.0.0',
     port: 10000,
