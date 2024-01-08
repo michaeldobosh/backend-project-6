@@ -27,13 +27,9 @@ export const test = {
 };
 
 export const production = {
-  client: 'postgresql',
+  client: 'sqlite3',
   connection: {
-    host: '0.0.0.0',
-    port: 10000,
-    user: 'postgres',
-    database: 'my_db',
-    password: 'postgres',
+    filename: './database.sqlite',
   },
   useNullAsDefault: true,
   migrations,
