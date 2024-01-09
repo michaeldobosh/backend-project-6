@@ -4,7 +4,6 @@
    "type": "module",
    "description": "Task Manager – система управления задачами.",
    "main": "server/plugin.js",
-   "proxy": "http://0.0.0.0:10000",
    "engines": {
       "node": ">=16.x"
    },
